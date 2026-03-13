@@ -32,15 +32,3 @@ resource "google_storage_bucket_object" "archive_folder" {
   content = " "
   bucket  = google_storage_bucket.data_bucket.name
 }
-
-# Pub/Sub notifications from Cloud Storage
-resource "google_storage_notification" "bucket_notification" {
-  bucket         = google_storage_bucket.data_bucket.name
-  payload_format = "JSON_API_V1" # This provides CloudEvent compatible payloads
-  topic          = google_pubsub_topic.platform_events_topic.id
-  event_types    = ["OBJECT_FINALIZE", "OBJECT_METADATA_UPDATE"]
-
-  # Note: The GCS Service Agent needs the Pub/Sub Publisher role on the topic
-  # for notifications to be successfully created.
-  depends_on = [google_pubsub_topic_iam_binding.gcs_publisher_binding]
-}

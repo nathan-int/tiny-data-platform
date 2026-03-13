@@ -1,6 +1,6 @@
 # Main configuration for tiny-data-platform
 # By keeping resource definitions inside the 'infrastructure' module, 
-# we separate concerns and keep the root clean for other tools like Dataform.
+# we separate concerns and keep the root clean.
 
 module "infrastructure" {
   source     = "./infrastructure"
