@@ -1,6 +1,33 @@
 # A generic Pub/Sub topic to receive CloudEvents from any microservice or source
 resource "google_pubsub_topic" "platform_events_topic" {
   name = "platform-events"
+
+  message_transforms {
+    javascript_udf {
+      function_name = "transform"
+      code          = <<EOF
+function transform(message) {
+  let objectId = message.attributes.objectId;
+  if (!objectId) {
+    try {
+      let payload = JSON.parse(Buffer.from(message.data, 'base64').toString());
+      objectId = payload.name;
+    } catch (e) {
+      return message;
+    }
+  }
+
+  if (objectId) {
+    let parts = objectId.split('/');
+    if (parts.length > 1) {
+      message.attributes['folderPrefix'] = parts[0];
+    }
+  }
+  return message;
+}
+EOF
+    }
+  }
 }
 
 # Get the default Google Cloud Storage service account email

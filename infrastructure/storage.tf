@@ -32,3 +32,11 @@ resource "google_storage_bucket_object" "archive_folder" {
   content = " "
   bucket  = google_storage_bucket.data_bucket.name
 }
+
+resource "google_storage_notification" "notification" {
+  bucket         = google_storage_bucket.data_bucket.name
+  payload_format = "JSON_API_V1"
+  topic          = google_pubsub_topic.platform_events_topic.id
+  event_types    = ["OBJECT_FINALIZE"]
+  depends_on     = [google_pubsub_topic_iam_binding.gcs_publisher_binding]
+}

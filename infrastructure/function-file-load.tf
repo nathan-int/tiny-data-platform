@@ -71,11 +71,12 @@ resource "google_cloudfunctions2_function" "file_load_function" {
 
   event_trigger {
     trigger_region        = var.region
-    event_type            = "google.cloud.storage.object.v1.finalized"
+    event_type            = "google.cloud.pubsub.topic.v1.messagePublished"
+    pubsub_topic          = google_pubsub_topic.platform_events_topic.id
     service_account_email = google_service_account.function_sa.email
     event_filters {
-      attribute = "bucket"
-      value     = google_storage_bucket.data_bucket.name
+      attribute = "folderPrefix"
+      value     = "landing"
     }
   }
 }

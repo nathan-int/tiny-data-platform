@@ -19,12 +19,15 @@ def process_gcs_event(cloud_event):
     data = cloud_event.data
     logger.info(f"Received event: {data}")
 
-    bucket_name = data["bucket"]
-    object_name = data["name"]
+    # The data payload is a Pub/Sub message representation
+    message = data.get("message", {})
+    attributes = message.get("attributes", {})
 
-    # Only process files placed in the 'landing/' directory
-    if not object_name.startswith("landing/") or object_name.endswith("/"):
-        logger.info(f"Ignoring object {object_name} as it's not a file in the landing folder.")
+    bucket_name = attributes.get("bucketId")
+    object_name = attributes.get("objectId")
+
+    if not bucket_name or not object_name:
+        logger.error(f"Missing bucketId or objectId from attributes: {attributes}")
         return
 
     logger.info(f"Processing new file: gs://{bucket_name}/{object_name}")
