@@ -1,0 +1,13 @@
+config {
+  type: "incremental",
+  schema: "bronze",
+  name: "bronze_incremental",
+  tags: ["load_file"]
+}
+
+SELECT
+  *,
+  '${dataform.projectConfig.vars.landing_file}' as source_file,
+  CURRENT_TIMESTAMP() as loaded_at
+FROM
+  ${ref("landing_external")}

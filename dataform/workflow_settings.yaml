@@ -1,0 +1,8 @@
+dataformCoreVersion: 3.0.50
+defaultProject: your-project-id
+defaultLocation: australia-southeast1
+defaultDataset: bronze
+defaultAssertionDataset: dataform_assertions
+vars:
+  landing_bucket: your-project-id-raw-data
+  landing_file: landing/default.csv

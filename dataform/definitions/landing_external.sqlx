@@ -1,0 +1,14 @@
+config {
+  type: "operations",
+  hasOutput: true,
+  name: "landing_external",
+  schema: "bronze",
+  tags: ["load_file"]
+}
+
+-- Recreate the external table dynamically to point to the specific new file in GCS
+CREATE OR REPLACE EXTERNAL TABLE ${self()}
+OPTIONS (
+  format = 'CSV',
+  uris = ['gs://${dataform.projectConfig.vars.landing_bucket}/${dataform.projectConfig.vars.landing_file}']
+);
