@@ -2,7 +2,7 @@ resource "google_storage_bucket" "data_bucket" {
   name          = "${var.project_id}-raw-data"
   location      = var.region
   force_destroy = true
-  
+
   # Enable Autoclass for automatic lifecycle management of storage classes
   autoclass {
     enabled = true
